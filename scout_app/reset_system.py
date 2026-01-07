@@ -4,7 +4,7 @@ import joblib
 from sklearn.preprocessing import StandardScaler
 import os
 
-BASE_PATH = 'model_data' # Colab ise: '/content/drive/MyDrive/Deep-Learning'
+BASE_PATH = 'model_data' 
 
 # Modelin kullandığı 27 Sütunun İsimleri (Sırasıyla)
 STATS_COLUMNS = [
@@ -30,7 +30,6 @@ def master_reset():
     print(f"📄 CSV Yüklendi. Toplam Oyuncu: {len(df)}")
     
     # 2. SADECE İLGİLİ 27 SÜTUNU SEÇ
-    # Eğer sütun isimleri birebir tutmazsa, sondan 27 taneyi alacağız.
     try:
         X_ham = df[STATS_COLUMNS].values
         print("✅ Sütun isimleri doğrulandı. 27 İstatistik seçildi.")
@@ -39,8 +38,7 @@ def master_reset():
         numeric_df = df.select_dtypes(include=[np.number])
         X_ham = numeric_df.values[:, -27:]
     
-    # 3. SCALER'I EĞİT (En Önemli Kısım)
-    # Bu işlem, sistemin "85" ile "0.85" arasındaki farkı anlamasını sağlar.
+    # 3. SCALER'I EĞİT
     print("⚖️ Scaler (Dönüştürücü) eğitiliyor...")
     scaler = StandardScaler()
     scaler.fit(X_ham)
@@ -48,10 +46,6 @@ def master_reset():
     # Kaydet
     joblib.dump(scaler, os.path.join(BASE_PATH, 'scout_scaler.pkl'))
     print("✅ 'scout_scaler.pkl' yenilendi. Artık ham veriyi doğru dönüştürecek.")
-    
-    # 4. MEVCUT VEKTÖRLERİ KALİBRE ET (Mean Centering)
-    # Scaler değiştiği için embeddingleri tekrar üretmek gerekir ama
-    # şimdilik sadece benzerlik ayarı (Mean Centering) yapalım.
     
     emb_path = os.path.join(BASE_PATH, 'scout_embeddings_merged.npy')
     if os.path.exists(emb_path):
