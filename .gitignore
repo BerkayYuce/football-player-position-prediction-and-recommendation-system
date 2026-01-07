@@ -1,0 +1,6 @@
+# AI Scout Model Dosyaları (Büyük Dosyalar)
+scout_app/model_data/
+*.npy
+*.pth
+*.pkl
+__pycache__/

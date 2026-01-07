@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Football Scout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>AI FOOTBALL SCOUT ⚽</h1>
+            <p>Early Fusion & Deep Learning ile Yeni Yıldızını Keşfet</p>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="/add_player" class="add-player-btn">
+                ➕ YENİ OYUNCU EKLE
+            </a>
+        </div>
+
+        <div class="search-container">
+            <form method="POST" class="search-form">
+                
+                <select name="search_mode" class="mode-select">
+                    <option value="merged" {% if current_mode == 'merged' %}selected{% endif %}>⭐ Süper Profil (Genel)</option>
+                    <option value="all" {% if current_mode == 'all' %}selected{% endif %}>📅 Tüm Sezonlar (Detaylı)</option>
+                </select>
+
+                <input type="text" name="player_name" placeholder="Oyuncu adı girin (Örn: Icardi)..." required>
+                
+                <button type="submit" class="search-btn">ANALİZ ET</button>
+            </form>
+        </div>
+
+        {% if error %}
+        <div class="error-msg">{{ error }}</div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="msg {{ category }}" style="text-align:center; margin-bottom:20px;">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% if target %}
+        <div class="results-area">
+            
+            <div class="target-card">
+                <h2>ANALİZ EDİLEN ({{ target.mode }})</h2>
+                <div class="player-name">{{ target.name }}</div>
+                <div class="player-pos">{{ target.pos }}</div>
+            </div>
+
+            <div class="similar-list">
+                <h3>🏆 EN BENZER OYUNCULAR</h3>
+                
+                {% for player in similars %}
+                <div class="player-row">
+                    <div class="info">
+                        <span class="p-name">{{ loop.index }}. {{ player.name }}</span>
+                        <span class="p-pos">{{ player.pos }}</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: {{ player.bar_width }}%;"></div>
+                        <span class="score">%{{ player.score }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

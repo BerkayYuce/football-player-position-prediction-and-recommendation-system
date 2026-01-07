@@ -1,0 +1,10 @@
+flask
+numpy
+pandas
+torch
+torchvision
+timm
+scikit-learn
+Pillow
+joblib
+tqdm
